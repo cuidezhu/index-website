@@ -127,68 +127,67 @@ nav {
 
 @media (max-width: 768px) {
     body, html {
-        font-size: 14px;
+        font-size: 16px; /* 增加基础字体大小 */
     }
 
     .container {
         padding: 1.5rem;
     }
-    .container::before {
-        background-size: cover;
-        background-position: center;
-    }
 
     header {
-        padding: 1rem;
-        margin-top: 1rem;
+        padding: 1.5rem;
+        margin-top: 2rem;
     }
 
     h1 {
-        font-size: 2.5em;
+        font-size: 2.8em; /* 增加标题字体大小 */
     }
 
     nav {
         flex-direction: column;
         align-items: center;
+        margin-top: 2rem;
     }
 
     .btn {
         width: 100%;
         max-width: 300px;
+        padding: 1rem 2rem; /* 增加按钮内边距 */
+        font-size: 1.3em; /* 增加按钮字体大小 */
+        margin-bottom: 1rem; /* 增加按钮之间的间距 */
     }
 
     .attribution {
-        bottom: 5px;
-        right: 5px;
-        font-size: 0.7em;
-        padding: 3px 6px;
+        bottom: 10px;
+        right: 10px;
+        font-size: 0.9em; /* 增加归属信息字体大小 */
+        padding: 5px 10px;
     }
 }
 
 @media (max-width: 480px) {
     body, html {
-        font-size: 12px;
+        font-size: 14px; /* 稍微减小基础字体大小，但仍保持较大 */
     }
 
     .container {
         padding: 1rem;
     }
-    .container::before {
-        background-size: cover;
-        background-position: center;
-    }
 
     header {
-        padding: 20px 30px;
+        padding: 1.2rem;
     }
 
     h1 {
-        font-size: 2em;
+        font-size: 2.5em; /* 调整标题字体大小 */
     }
 
     .btn {
-        padding: 10px 20px;
-        font-size: 0.9em;
-        width: 100%;
+        padding: 0.9rem 1.8rem; /* 调整按钮内边距 */
+        font-size: 1.2em; /* 调整按钮字体大小 */
+    }
+
+    .attribution {
+        font-size: 0.8em; /* 调整归属信息字体大小 */
     }
 }

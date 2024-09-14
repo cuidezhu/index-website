@@ -1,3 +1,25 @@
+function handleGlobalErrors() {
+    document.addEventListener('click', function(event) {
+        // 阻止事件冒泡，防止其他脚本捕获到这个事件
+        event.stopPropagation();
+    }, true);
+
+    window.addEventListener('error', function(event) {
+        console.log('Caught global error:', event.error);
+        // 阻止错误继续传播
+        event.preventDefault();
+    });
+
+    window.addEventListener('unhandledrejection', function(event) {
+        console.log('Caught unhandled promise rejection:', event.reason);
+        // 阻止错误继续传播
+        event.preventDefault();
+    });
+}
+
+// 在文件末尾调用这个函数
+handleGlobalErrors();
+
 const colorThief = new ColorThief();
 
 // 预定义的图片列表作为备选
@@ -177,7 +199,7 @@ function updateAttribution(imageData) {
 }
 
 // 页面加载时设置背景
-setRandomBackground();
+setRandomBackground().catch(error => console.error('设置背景时发生错误:', error));
 
 // 可选：每隔一定时间更换背景
 // setInterval(setRandomBackground, 300000); // 每5分钟更换一次背景
