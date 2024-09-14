@@ -2,6 +2,8 @@
     --text-color: rgba(255, 255, 255, 0.9); /* 默认文字颜色 */
     --btn-bg-color: rgba(0, 0, 0, 0.3); /* 默认按钮背景色 */
     --btn-text-color: rgba(255, 255, 255, 0.9); /* 新增按钮文字颜色 */
+    --bg-image: none;
+    --bg-opacity: 0;
 }
 
 body, html {
@@ -13,6 +15,7 @@ body, html {
 
 .container {
     height: 100%;
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -20,15 +23,30 @@ body, html {
     text-align: center;
     color: var(--text-color);
     transition: background-image 0.5s ease-in-out, color 0.5s ease-in-out;
-    /* 现代简约风格的渐变背景 */
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    /* 修改背景图片设置 */
     background-size: cover;
-    background-position: center center;
+    background-position: center;
     background-repeat: no-repeat;
-    background-attachment: fixed;
     padding: 20px;
     box-sizing: border-box;
+    overflow: hidden;
+    position: relative;
+}
+
+.container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1;
+    transition: opacity 0.5s ease-in-out;
+    background-image: var(--bg-image);
+    opacity: var(--bg-opacity);
 }
 
 header {
@@ -114,9 +132,10 @@ nav {
 
     .container {
         padding: 1.5rem;
-        background-size: auto 100%;
-        background-position: center center;
-        background-attachment: scroll; /* 在移动设备上禁用固定背景 */
+    }
+    .container::before {
+        background-size: cover;
+        background-position: center;
     }
 
     header {
@@ -153,7 +172,10 @@ nav {
 
     .container {
         padding: 1rem;
+    }
+    .container::before {
         background-size: cover;
+        background-position: center;
     }
 
     header {

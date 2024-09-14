@@ -128,7 +128,10 @@ async function setBackgroundImage(imageUrl) {
         img.crossOrigin = "Anonymous";
         img.onload = function() {
             console.log('图片加载成功，设置背景...');
-            document.querySelector('.container').style.backgroundImage = `url(${imageUrl})`;
+            const container = document.querySelector('.container');
+            container.style.backgroundImage = 'none'; // 移除原来的背景图
+            container.style.setProperty('--bg-image', `url(${imageUrl})`);
+            container.style.setProperty('--bg-opacity', '1');
             const dominantColor = colorThief.getColor(img);
             const { textColor, btnBgColor, btnTextColor } = generateRichColors(...dominantColor);
             document.documentElement.style.setProperty('--text-color', textColor);
