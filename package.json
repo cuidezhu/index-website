@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "build": "mkdir -p dist && cp index.html style.css dist/ && cp -r netlify dist/ && node build.js"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.1"
+  }
+}
