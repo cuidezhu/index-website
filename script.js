@@ -122,13 +122,14 @@ async function setRandomBackground() {
     }
 }
 
-async function setBackgroundImage(imageUrl) {
+async function setBackgroundImage(imageData) {
     return new Promise((resolve, reject) => {
         const img = new Image();
         img.crossOrigin = "Anonymous";
         img.onload = function() {
             console.log('图片加载成功，设置背景...');
             const container = document.querySelector('.container');
+            const imageUrl = typeof imageData === 'string' ? imageData : imageData.imageUrl;
             container.style.backgroundImage = 'none'; // 移除原来的背景图
             container.style.setProperty('--bg-image', `url(${imageUrl})`);
             container.style.setProperty('--bg-opacity', '1');
@@ -140,31 +141,38 @@ async function setBackgroundImage(imageUrl) {
             console.log('背景设置完成，文字颜色:', textColor, '按钮背景色:', btnBgColor, '按钮文字颜色:', btnTextColor);
             
             // 更新归属信息
-            updateAttribution(imageUrl);
+            updateAttribution(imageData);
             resolve();
         }
         img.onerror = function() {
             console.error('图片加载失败，尝试使用备选图片');
-            if (fallbackImages.includes(imageUrl)) {
+            if (fallbackImages.includes(imageData)) {
                 reject(new Error('所有备选图片均加载失败'));
             } else {
                 const fallbackUrl = getRandomImage(fallbackImages);
                 setBackgroundImage(fallbackUrl).then(resolve).catch(reject);
             }
         }
-        img.src = imageUrl;
+        img.src = typeof imageData === 'string' ? imageData : imageData.imageUrl;
     });
 }
 
-function updateAttribution(imageUrl) {
+function updateAttribution(imageData) {
     const attribution = document.getElementById('attribution');
-    if (fallbackImages.includes(imageUrl)) {
+    if (typeof imageData === 'string') {
+        // 这是fallback图片的情况
         attribution.innerHTML = 'Photo from Unsplash';
-    } else {
+        attribution.onclick = null; // 移除点击事件
+    } else if (imageData && imageData.photographerName && imageData.photographerUrl && imageData.unsplashUrl) {
         attribution.innerHTML = `
-            Photo by <a href="${imageUrl.photographerUrl}" target="_blank">${imageUrl.photographerName}</a> on 
-            <a href="${imageUrl.unsplashUrl}" target="_blank">Unsplash</a>
+            Photo by <a href="${imageData.photographerUrl}" target="_blank">${imageData.photographerName}</a> on 
+            <a href="${imageData.unsplashUrl}" target="_blank">Unsplash</a>
         `;
+        attribution.onclick = null; // 移除可能存在的旧点击事件
+    } else {
+        // 如果没有完整的信息，显示一个通用消息
+        attribution.innerHTML = 'Photo from Unsplash';
+        attribution.onclick = null; // 移除点击事件
     }
 }
 
