@@ -77,41 +77,41 @@ function getRandomImage(images) {
 
 let lastRequestTime = parseInt(localStorage.getItem('lastRequestTime') || '0');
 const requestCooldown = 3600000; // 1小时冷却时间
-const cacheSize = 20; // 缓存的图URL数量
+const cacheSize = 5; // 减少缓存的图片URL数量
 
 async function fetchAndCacheImages() {
     const currentTime = Date.now();
-    if (currentTime - lastRequestTime < requestCooldown) {
-        console.log('API冷却中，使用现有缓存');
-        return getCachedImageUrls();
+    let cachedUrls = getCachedImageUrls();
+
+    if (cachedUrls.length >= cacheSize && currentTime - lastRequestTime < requestCooldown) {
+        console.log('使用现有缓存');
+        return cachedUrls;
     }
 
     try {
-        console.log('获取新的图片URL批次...');
-        const urls = [];
-        for (let i = 0; i < cacheSize; i++) {
-            const response = await fetch('/.netlify/functions/getUnsplashImage');
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            const data = await response.json();
-            urls.push(data);
+        console.log('获取新的图片URL...');
+        const response = await fetch('/.netlify/functions/getUnsplashImage');
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const data = await response.json();
+        
+        cachedUrls.unshift(data); // 将新图片添加到缓存开头
+        if (cachedUrls.length > cacheSize) {
+            cachedUrls = cachedUrls.slice(0, cacheSize); // 保持缓存大小
         }
-        setCachedImageUrls(urls);
+        
+        setCachedImageUrls(cachedUrls);
         localStorage.setItem('lastRequestTime', currentTime.toString());
-        console.log('成功缓存新的图片URL批次');
-        return urls;
+        console.log('成功缓存新的图片URL');
+        return cachedUrls;
     } catch (error) {
         console.error('获取图片失败，使用备选图片:', error);
-        return fallbackImages;
+        return cachedUrls.length > 0 ? cachedUrls : fallbackImages;
     }
 }
 
 async function setRandomBackground() {
     try {
-        let imageData = getCachedImageUrls();
-        if (imageData.length === 0) {
-            imageData = await fetchAndCacheImages();
-        }
-        
+        let imageData = await fetchAndCacheImages();
         const selectedImage = getRandomImage(imageData);
         
         await setBackgroundImage(selectedImage.imageUrl || selectedImage);
