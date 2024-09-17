@@ -57,7 +57,7 @@ header {
     box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
     width: 100%;
     max-width: 600px;
-    margin-top: 50px;
+    margin-top: -50px;
 }
 
 h1 {
