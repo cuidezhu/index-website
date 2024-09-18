@@ -136,7 +136,7 @@ async function setRandomBackground() {
         let imageData = await fetchAndCacheImages();
         const selectedImage = getRandomImage(imageData);
         
-        await setBackgroundImage(selectedImage.imageUrl || selectedImage);
+        await setBackgroundImage(selectedImage || selectedImage.imageUrl);
     } catch (error) {
         console.error('获取背景图片时出错:', error);
         const fallbackUrl = getRandomImage(fallbackImages);
@@ -181,20 +181,18 @@ async function setBackgroundImage(imageData) {
 
 function updateAttribution(imageData) {
     const attribution = document.getElementById('attribution');
+    console.log('attribution', attribution);
     if (typeof imageData === 'string') {
         // 这是fallback图片的情况
         attribution.innerHTML = 'Photo from Unsplash';
-        attribution.onclick = null; // 移除点击事件
     } else if (imageData && imageData.photographerName && imageData.photographerUrl && imageData.unsplashUrl) {
         attribution.innerHTML = `
             Photo by <a href="${imageData.photographerUrl}" target="_blank">${imageData.photographerName}</a> on 
             <a href="${imageData.unsplashUrl}" target="_blank">Unsplash</a>
         `;
-        attribution.onclick = null; // 移除可能存在的旧点击事件
     } else {
         // 如果没有完整的信息，显示一个通用消息
         attribution.innerHTML = 'Photo from Unsplash';
-        attribution.onclick = null; // 移除点击事件
     }
 }
 
